@@ -253,58 +253,6 @@
             </div>
         </div>
     </div>
-
-    <script>
-        function predict() {
-            let crop = document.getElementById("crop").value;
-            let area = Number(document.getElementById("area").value);
-            let areaUnit = document.getElementById("areaUnit").value;
-            let temp = Number(document.getElementById("temp").value);
-            let humidity = Number(document.getElementById("humidity").value);
-            let rain = Number(document.getElementById("rain").value);
-            
-            // Convert area to acres for standardization
-            let areaInAcres = area;
-            if (areaUnit === "Bigha") {
-                areaInAcres = area * 0.625; // 1 Bigha ≈ 0.625 acres
-            } else if (areaUnit === "Hectares") {
-                areaInAcres = area * 2.471; // 1 Hectare ≈ 2.471 acres
-            }
-            
-            // Base formula for water requirement
-            let base = temp * 0.2 + (100 - humidity) * 0.1 - rain * 0.3;
-            
-            // Crop water coefficients (Kc)
-            let kcValues = {
-                "Wheat": 0.85,
-                "Rice": 1.20,
-                "Maize": 1.00,
-                "Sugarcane": 1.25,
-                "Cotton": 0.95,
-                "Millet": 0.70,
-                "Sorghum": 0.75,
-                "Potato": 1.10,
-                "Soybean": 0.90,
-                "Groundnut": 0.85,
-                "Sunflower": 0.95
-            };
-            
-            let kc = kcValues[crop] || 1;
-            let waterPerDay = base * kc;
-            if (waterPerDay < 0) waterPerDay = 0;
-            
-            // Calculate total water needed (mm/day * area)
-            // 1 acre-mm = 102.79 cubic meters
-            let totalWaterMM = waterPerDay * areaInAcres;
-            let totalWaterCubicMeters = (totalWaterMM * 102.79).toFixed(0);
-            let totalWaterLiters = (totalWaterMM * 102790).toFixed(0);
-            
-            document.getElementById("output").innerText = waterPerDay.toFixed(1) + " mm/day";
-            document.getElementById("totalOutput").innerText = 
-                totalWaterCubicMeters + " m³/day (" + 
-                totalWaterLiters.toLocaleString() + " liters/day)";
-            document.getElementById("resultBox").style.display = "block";
-        }
-    </script>
+      <script src="./js/script.js"></script>
 </body>
 </html>
