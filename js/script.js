@@ -65,7 +65,7 @@ async function getWeatherDetails(lat, lon) {
 // ==========================================
 async function getWaterPrediction(temp, humidity, rain, crop, area) {
 
-    const apiKey = "YOUR_GEMINI_API_KEY";
+    const apiKey = "AIzaSyB8WJpCVXClm9kSxRBZ7UdpCp9vHJS8ISY";
 
     const prompt = `
 You are an agricultural irrigation expert.
@@ -138,3 +138,4 @@ async function calculateWater() {
     document.getElementById("result").style.display = "block";
     document.getElementById("result").innerText = result;
 }
+
