@@ -1,11 +1,8 @@
 // ==========================================
 // 1. Get user location automatically
 // ==========================================
-const lat;
-const lon;
 window.onload = () => {
     getUserLocationAndWeather();
-    getWeatherDetails(lat, lon);
 };
 
 // get user's latitude & longitude
@@ -17,21 +14,15 @@ function getUserLocationAndWeather() {
 
     navigator.geolocation.getCurrentPosition(
         async (pos) => {
-            lat = pos.coords.latitude;
-            lon = pos.coords.longitude;
+            const lat = pos.coords.latitude;
+            const lon = pos.coords.longitude;
 
             // update form fields
             document.getElementById("latitude").value = lat;
             document.getElementById("longitude").value = lon;
 
             // fetch weather automatically
-            const weather = await getWeatherDetails(lat, lon);
-
-            if (weather) {
-                document.getElementById("temperature").value = weather.temperature;
-                document.getElementById("humidity").value = weather.humidity;
-                document.getElementById("rainfall").value = weather.rainfall;
-            }
+            await getWeatherDetails(lat, lon);
         },
         () => {
             alert("Location access denied. Please enable location for auto weather.");
@@ -55,6 +46,7 @@ async function getWeatherDetails(lat, lon) {
         const humidity = data.hourly.relative_humidity_2m[0];
         const rainfall = data.hourly.rain[0];
 
+        // update UI
         document.getElementById("temperature").value = temperature;
         document.getElementById("humidity").value = humidity;
         document.getElementById("rainfall").value = rainfall;
@@ -67,13 +59,12 @@ async function getWeatherDetails(lat, lon) {
     }
 }
 
-
 // ==========================================
 // 3. Call Gemini API for water demand
 // ==========================================
 async function getWaterPrediction(temp, humidity, rain, crop, area) {
 
-    const apiKey = "AIzaSyB8WJpCVXClm9kSxRBZ7UdpCp9vHJS8ISY";
+    const apiKey = "YOUR_API_KEY";
 
     const prompt = `
 You are an agricultural irrigation expert.
@@ -87,20 +78,7 @@ Land Area: ${area} hectares
 Temperature: ${temp}°C
 Humidity: ${humidity}%
 Rainfall: ${rain}mm
-
-Reply ONLY in this format:
-
-Water Requirement Per Day: X mm/day
-Total Water Needed: Y litres
     `;
-
-    const body = {
-        contents: [
-            {
-                parts: [{ text: prompt }]
-            }
-        ]
-    };
 
     try {
         const response = await fetch(
@@ -108,7 +86,9 @@ Total Water Needed: Y litres
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(body)
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }]
+                })
             }
         );
 
@@ -133,19 +113,8 @@ async function calculateWater() {
     const humidity = document.getElementById("humidity").value;
     const rainfall = document.getElementById("rainfall").value;
 
-    // Call Gemini AI
-    const result = await getWaterPrediction(
-        temp,
-        humidity,
-        rainfall,
-        crop,
-        area
-    );
+    const result = await getWaterPrediction(temp, humidity, rainfall, crop, area);
 
-    // Show the result
     document.getElementById("result").style.display = "block";
     document.getElementById("result").innerText = result;
 }
-
-
-
