@@ -1,6 +1,8 @@
 // ==========================================
 // 1. Get user location automatically
 // ==========================================
+const lat;
+const lon;
 window.onload = () => {
     getUserLocationAndWeather();
     getWeatherDetails(lat, lon);
@@ -15,8 +17,8 @@ function getUserLocationAndWeather() {
 
     navigator.geolocation.getCurrentPosition(
         async (pos) => {
-            const lat = pos.coords.latitude;
-            const lon = pos.coords.longitude;
+            lat = pos.coords.latitude;
+            lon = pos.coords.longitude;
 
             // update form fields
             document.getElementById("latitude").value = lat;
@@ -144,5 +146,6 @@ async function calculateWater() {
     document.getElementById("result").style.display = "block";
     document.getElementById("result").innerText = result;
 }
+
 
 
