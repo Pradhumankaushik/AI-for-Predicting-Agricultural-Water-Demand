@@ -3,6 +3,7 @@
 // ==========================================
 window.onload = () => {
     getUserLocationAndWeather();
+    getWeatherDetails(lat, lon);
 };
 
 // get user's latitude & longitude
@@ -48,17 +49,22 @@ async function getWeatherDetails(lat, lon) {
         const response = await fetch(url);
         const data = await response.json();
 
-        return {
-            temperature: data.hourly.temperature_2m[0],
-            humidity: data.hourly.relative_humidity_2m[0],
-            rainfall: data.hourly.rain[0]
-        };
+        const temperature = data.hourly.temperature_2m[0];
+        const humidity = data.hourly.relative_humidity_2m[0];
+        const rainfall = data.hourly.rain[0];
+
+        document.getElementById("temperature").value = temperature;
+        document.getElementById("humidity").value = humidity;
+        document.getElementById("rainfall").value = rainfall;
+
+        return { temperature, humidity, rainfall };
 
     } catch (error) {
         console.error("Weather fetch failed:", error);
         return null;
     }
 }
+
 
 // ==========================================
 // 3. Call Gemini API for water demand
@@ -138,4 +144,5 @@ async function calculateWater() {
     document.getElementById("result").style.display = "block";
     document.getElementById("result").innerText = result;
 }
+
 
