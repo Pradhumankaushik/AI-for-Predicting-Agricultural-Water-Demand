@@ -12,99 +12,242 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0e27;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .bg-animation::before,
+        .bg-animation::after {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.4;
+            animation: float 20s ease-in-out infinite;
+        }
+        
+        .bg-animation::before {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            top: -300px;
+            right: -300px;
+            animation-delay: 0s;
+        }
+        
+        .bg-animation::after {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            bottom: -300px;
+            left: -300px;
+            animation-delay: -10s;
+        }
+        
+        @keyframes float {
+            0%, 100% { 
+                transform: translate(0, 0) scale(1);
+            }
+            25% { 
+                transform: translate(50px, -50px) scale(1.1);
+            }
+            50% { 
+                transform: translate(-30px, 30px) scale(0.9);
+            }
+            75% { 
+                transform: translate(30px, 50px) scale(1.05);
+            }
+        }
+        
+        /* Particles */
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: particleFloat 15s linear infinite;
+        }
+        
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
         }
         
         .container {
-            max-width: 480px;
+            max-width: 550px;
             width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 35px;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            animation: slideIn 0.5s ease-out;
+            background: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(30px) saturate(180%);
+            padding: 45px;
+            border-radius: 30px;
+            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.5),
+                        0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+                        0 0 100px rgba(102, 126, 234, 0.2);
+            animation: containerEntrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            z-index: 1;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        @keyframes slideIn {
+        @keyframes containerEntrance {
             from {
                 opacity: 0;
-                transform: translateY(-30px);
+                transform: translateY(-60px) scale(0.85) rotateX(10deg);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) scale(1) rotateX(0deg);
             }
         }
         
-        h2 {
+        .header {
             text-align: center;
-            margin-bottom: 25px;
-            color: #333;
-            font-size: 28px;
-            font-weight: 600;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .header::before {
+            content: '💧';
+            font-size: 60px;
+            display: block;
+            margin-bottom: 15px;
+            animation: dropBounce 2s ease-in-out infinite;
+            filter: drop-shadow(0 5px 15px rgba(59, 130, 246, 0.5));
+        }
+        
+        @keyframes dropBounce {
+            0%, 100% { 
+                transform: translateY(0) scale(1);
+            }
+            50% { 
+                transform: translateY(-10px) scale(1.1);
+            }
+        }
+        
+        .header h2 {
+            background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #ec4899 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+        
+        .header p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 15px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
         
         .input-group {
-            margin-bottom: 20px;
-            animation: fadeIn 0.6s ease-out backwards;
+            margin-bottom: 24px;
+            animation: slideInLeft 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
         }
         
-        .input-group:nth-child(2) { animation-delay: 0.1s; }
+        .input-group:nth-child(1) { animation-delay: 0.1s; }
+        .input-group:nth-child(2) { animation-delay: 0.15s; }
         .input-group:nth-child(3) { animation-delay: 0.2s; }
-        .input-group:nth-child(4) { animation-delay: 0.3s; }
-        .input-group:nth-child(5) { animation-delay: 0.4s; }
-        .input-group:nth-child(6) { animation-delay: 0.5s; }
+        .input-group:nth-child(4) { animation-delay: 0.25s; }
+        .input-group:nth-child(5) { animation-delay: 0.3s; }
+        .input-group:nth-child(6) { animation-delay: 0.35s; }
         
-        @keyframes fadeIn {
+        @keyframes slideInLeft {
             from {
                 opacity: 0;
-                transform: translateX(-20px);
+                transform: translateX(-40px) rotateY(-10deg);
             }
             to {
                 opacity: 1;
-                transform: translateX(0);
+                transform: translateX(0) rotateY(0deg);
             }
         }
         
         label {
-            display: block;
+            display: flex;
+            align-items: center;
+            gap: 10px;
             font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 8px;
-            color: #555;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: rgba(255, 255, 255, 0.9);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .icon {
+            font-size: 20px;
+            filter: drop-shadow(0 2px 8px rgba(59, 130, 246, 0.4));
         }
         
         input, select {
             width: 100%;
-            padding: 12px 15px;
-            border-radius: 10px;
-            border: 2px solid #e0e0e0;
-            font-size: 15px;
-            transition: all 0.3s ease;
-            background: white;
+            padding: 16px 20px;
+            border-radius: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            font-size: 16px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(30, 41, 59, 0.8);
+            color: #fff;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+        
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
         }
         
         input:focus, select:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-            transform: translateY(-2px);
+            border-color: #60a5fa;
+            background: rgba(30, 41, 59, 1);
+            box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.15),
+                        0 10px 30px rgba(96, 165, 250, 0.2),
+                        0 0 20px rgba(96, 165, 250, 0.3) inset;
+            transform: translateY(-3px) scale(1.02);
+        }
+        
+        input:hover:not(:focus), select:hover:not(:focus) {
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(30, 41, 59, 0.9);
+            transform: translateY(-1px);
         }
         
         .area-inputs {
             display: flex;
-            gap: 10px;
+            gap: 12px;
         }
         
         .area-inputs input {
@@ -112,94 +255,264 @@
         }
         
         .area-inputs select {
-            flex: 0.8;
+            flex: 0.85;
         }
         
-        button {
+        .btn-predict {
             width: 100%;
-            padding: 14px;
-            margin-top: 25px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 18px;
+            margin-top: 35px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-size: 200% 200%;
             color: white;
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 18px;
+            font-weight: 800;
             border: none;
-            border-radius: 10px;
+            border-radius: 15px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 35px rgba(102, 126, 234, 0.4),
+                        0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            animation: slideInLeft 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+            animation-delay: 0.4s;
         }
         
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        .btn-predict::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
         }
         
-        button:active {
-            transform: translateY(0);
+        .btn-predict:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .btn-predict:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 15px 50px rgba(102, 126, 234, 0.6),
+                        0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+            background-position: 100% 0;
+        }
+        
+        .btn-predict:active {
+            transform: translateY(-2px) scale(1);
+        }
+        
+        .btn-predict span {
+            position: relative;
+            z-index: 1;
         }
         
         .result {
-            margin-top: 25px;
-            padding: 20px;
-            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
-            border-radius: 15px;
+            margin-top: 35px;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.15) 100%);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
             display: none;
-            animation: resultSlide 0.5s ease-out;
-            box-shadow: 0 8px 25px rgba(132, 250, 176, 0.3);
+            animation: resultEntrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 15px 50px rgba(16, 185, 129, 0.3),
+                        0 0 0 1px rgba(16, 185, 129, 0.3) inset;
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            position: relative;
+            overflow: hidden;
         }
         
-        @keyframes resultSlide {
+        .result::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            100% { left: 100%; }
+        }
+        
+        @keyframes resultEntrance {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(40px) scale(0.9) rotateX(-10deg);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) scale(1) rotateX(0deg);
             }
         }
         
-        .result b {
-            display: block;
-            margin-bottom: 10px;
-            color: #2d3748;
-            font-size: 16px;
+        .result-content {
+            position: relative;
+            z-index: 1;
         }
         
-        .result p {
-            color: #1a202c;
-            font-size: 24px;
+        .result-section {
+            margin-bottom: 25px;
+        }
+        
+        .result-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .result-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
             font-weight: 700;
-            margin: 5px 0;
+            color: rgba(16, 185, 129, 1);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
         }
         
-        .result .total-water {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 2px solid rgba(255, 255, 255, 0.5);
+        .result-value {
+            color: #fff;
+            font-size: 36px;
+            font-weight: 900;
+            text-shadow: 0 2px 15px rgba(16, 185, 129, 0.5);
+            letter-spacing: -1px;
+        }
+        
+        .divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.5), transparent);
+            margin: 25px 0;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #60a5fa, #a78bfa);
+            transform: translateX(-100%);
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover::before {
+            transform: translateX(0);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(96, 165, 250, 0.3);
+            border-color: rgba(96, 165, 250, 0.5);
+        }
+        
+        .stat-label {
+            display: block;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        
+        .stat-value {
+            display: block;
+            color: #fff;
+            font-size: 24px;
+            font-weight: 800;
+            text-shadow: 0 2px 10px rgba(96, 165, 250, 0.3);
+        }
+        
+        .recommendation {
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 15px;
+            border-left: 4px solid #3b82f6;
+        }
+        
+        .recommendation-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #60a5fa;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .recommendation-text {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            line-height: 1.6;
         }
         
         @media (max-width: 480px) {
             .container {
-                padding: 25px;
+                padding: 35px 25px;
             }
-            h2 {
-                font-size: 24px;
+            .header h2 {
+                font-size: 28px;
             }
-            button {
-                font-size: 14px;
-                padding: 12px;
+            .btn-predict {
+                font-size: 16px;
+                padding: 16px;
+            }
+            .result-value {
+                font-size: 28px;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .stat-value {
+                font-size: 20px;
             }
         }
     </style>
 </head>
 <body>
+    <div class="bg-animation"></div>
+    
     <div class="container">
-        <h2>💧 Water Demand Predictor</h2>
+        <div class="header">
+            <h2>Water Demand Predictor</h2>
+            <p>AI-Powered Irrigation System</p>
+        </div>
         
         <div class="input-group">
-            <label>Crop Type</label>
+            <label><span class="icon">🌾</span> Crop Type</label>
             <select id="crop">
                 <option>Wheat</option>
                 <option>Rice</option>
@@ -216,9 +529,9 @@
         </div>
         
         <div class="input-group">
-            <label>Land Area</label>
+            <label><span class="icon">📏</span> Land Area</label>
             <div class="area-inputs">
-                <input type="number" id="area" value="1" min="0" step="0.01">
+                <input type="number" id="area" value="1" min="0.01" step="0.01" placeholder="Enter area">
                 <select id="areaUnit">
                     <option>Acres</option>
                     <option>Bigha</option>
@@ -228,33 +541,71 @@
         </div>
         
         <div class="input-group">
-            <label>Temperature (°C)</label>
-            <input type="number" id="temp" value="32">
+            <label><span class="icon">🌡️</span> Temperature</label>
+            <input type="number" id="temp" value="32" placeholder="°C">
         </div>
         
         <div class="input-group">
-            <label>Humidity (%)</label>
-            <input type="number" id="humidity" value="60">
+            <label><span class="icon">💨</span> Humidity</label>
+            <input type="number" id="humidity" value="60" placeholder="%">
         </div>
         
         <div class="input-group">
-            <label>Rainfall (mm)</label>
-            <input type="number" id="rain" value="0">
+            <label><span class="icon">🌧️</span> Rainfall</label>
+            <input type="number" id="rain" value="0" placeholder="mm">
         </div>
         
-        <button onclick="predict()">🔮 Predict Water Requirement</button>
+        <button class="btn-predict" onclick="predict()">
+            <span>✨ Calculate Water Demand</span>
+        </button>
         
         <div class="result" id="resultBox">
-            <b>Water Requirement Per Day:</b>
-            <p id="output"></p>
-            <div class="total-water">
-                <b>Total Water Needed:</b>
-                <p id="totalOutput"></p>
+            <div class="result-content">
+                <div class="result-section">
+                    <div class="result-label">💧 Water Requirement (Per Unit Area)</div>
+                    <div class="result-value" id="output">-</div>
+                </div>
+                
+                <div class="divider"></div>
+                
+                <div class="result-section">
+                    <div class="result-label">🚰 Total Volume Required</div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-label">Cubic Meters</span>
+                            <span class="stat-value" id="cubicMeters">-</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label">Liters</span>
+                            <span class="stat-value" id="liters">-</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="recommendation">
+                    <div class="recommendation-title">💡 Smart Recommendation</div>
+                    <div class="recommendation-text" id="recommendation">-</div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
+        // Create particles
+        function createParticles() {
+            const bgAnimation = document.querySelector('.bg-animation');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                bgAnimation.appendChild(particle);
+            }
+        }
+        
+        createParticles();
+        
         function predict() {
             let crop = document.getElementById("crop").value;
             let area = Number(document.getElementById("area").value);
@@ -263,12 +614,30 @@
             let humidity = Number(document.getElementById("humidity").value);
             let rain = Number(document.getElementById("rain").value);
             
+            // Validation
+            if (area <= 0) {
+                alert("⚠️ Please enter a valid land area!");
+                return;
+            }
+            
+            if (temp < -50 || temp > 60) {
+                alert("⚠️ Please enter a realistic temperature (-50°C to 60°C)!");
+                return;
+            }
+            
+            if (humidity < 0 || humidity > 100) {
+                alert("⚠️ Humidity must be between 0% and 100%!");
+                return;
+            }
+            
             // Convert area to acres for standardization
             let areaInAcres = area;
+            let areaText = area + " " + areaUnit;
+            
             if (areaUnit === "Bigha") {
-                areaInAcres = area * 0.625; // 1 Bigha ≈ 0.625 acres
+                areaInAcres = area * 0.625;
             } else if (areaUnit === "Hectares") {
-                areaInAcres = area * 2.471; // 1 Hectare ≈ 2.471 acres
+                areaInAcres = area * 2.471;
             }
             
             // Base formula for water requirement
@@ -293,17 +662,47 @@
             let waterPerDay = base * kc;
             if (waterPerDay < 0) waterPerDay = 0;
             
-            // Calculate total water needed (mm/day * area)
-            // 1 acre-mm = 102.79 cubic meters
+            // Calculate total water needed
             let totalWaterMM = waterPerDay * areaInAcres;
-            let totalWaterCubicMeters = (totalWaterMM * 102.79).toFixed(0);
-            let totalWaterLiters = (totalWaterMM * 102790).toFixed(0);
+            let totalWaterCubicMeters = Math.round(totalWaterMM * 102.79);
+            let totalWaterLiters = Math.round(totalWaterMM * 102790);
             
-            document.getElementById("output").innerText = waterPerDay.toFixed(1) + " mm/day";
-            document.getElementById("totalOutput").innerText = 
-                totalWaterCubicMeters + " m³/day (" + 
-                totalWaterLiters.toLocaleString() + " liters/day)";
+            // Generate recommendation
+            let recommendation = generateRecommendation(crop, waterPerDay, temp, humidity, rain);
+            
+            // Display results
+            document.getElementById("output").innerText = waterPerDay.toFixed(2) + " mm/day";
+            document.getElementById("cubicMeters").innerText = totalWaterCubicMeters.toLocaleString() + " m³";
+            document.getElementById("liters").innerText = totalWaterLiters.toLocaleString() + " L";
+            document.getElementById("recommendation").innerText = recommendation;
+            
             document.getElementById("resultBox").style.display = "block";
+        }
+        
+        function generateRecommendation(crop, waterDemand, temp, humidity, rain) {
+            let recommendations = [];
+            
+            if (waterDemand < 3) {
+                recommendations.push("Low water demand detected. Consider drip irrigation for maximum efficiency.");
+            } else if (waterDemand < 6) {
+                recommendations.push("Moderate water demand. Sprinkler irrigation recommended.");
+            } else {
+                recommendations.push("High water demand. Flood irrigation or pivot systems recommended.");
+            }
+            
+            if (temp > 35) {
+                recommendations.push("High temperature detected - consider early morning or evening irrigation to reduce evaporation.");
+            }
+            
+            if (humidity < 40) {
+                recommendations.push("Low humidity may increase water loss. Monitor soil moisture regularly.");
+            }
+            
+            if (rain > 5) {
+                recommendations.push("Recent rainfall detected. You may reduce irrigation accordingly.");
+            }
+            
+            return recommendations.join(" ");
         }
     </script>
 </body>
