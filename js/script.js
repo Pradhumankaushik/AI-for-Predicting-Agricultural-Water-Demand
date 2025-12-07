@@ -1,22 +1,21 @@
-async function getWeather(lat, lon) {
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m`;
+async function getWeatherDetails(lat, lon) {
+    const url =
+        `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
+        `&hourly=temperature_2m,relative_humidity_2m,rain`;
 
     try {
         const response = await fetch(url);
         const data = await response.json();
 
-        // Extract hourly temperature array
         const temps = data.hourly.temperature_2m;
-        const times = data.hourly.time;
-
-        // Current temperature = first entry
-        const currentTemp = temps[0];
+        const humidity = data.hourly.relative_humidity_2m;
+        const rainfall = data.hourly.rain;
 
         return {
-            temperature: currentTemp,
-            allTemperatures: temps,
-            times: times,
-            raw: data
+            temperature: temps[0],          // Current hour temp
+            humidity: humidity[0],          // Current hour humidity
+            rainfall: rainfall[0],          // Current hour rainfall (mm)
+            raw: data                       // Full API response (optional)
         };
 
     } catch (error) {
