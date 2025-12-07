@@ -17,10 +17,6 @@ function getUserLocationAndWeather() {
             const lat = pos.coords.latitude;
             const lon = pos.coords.longitude;
 
-            // update form fields
-            document.getElementById("latitude").value = lat;
-            document.getElementById("longitude").value = lon;
-
             // fetch weather automatically
             await getWeatherDetails(lat, lon);
         },
@@ -118,3 +114,4 @@ async function calculateWater() {
     document.getElementById("result").style.display = "block";
     document.getElementById("result").innerText = result;
 }
+
