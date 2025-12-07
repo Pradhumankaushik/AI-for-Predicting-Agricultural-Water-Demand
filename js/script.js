@@ -1,3 +1,44 @@
+// ==========================================
+// 1. Get user location automatically
+// ==========================================
+window.onload = () => {
+    getUserLocationAndWeather();
+};
+
+// get user's latitude & longitude
+function getUserLocationAndWeather() {
+    if (!navigator.geolocation) {
+        alert("Geolocation is not supported by your browser.");
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+        async (pos) => {
+            const lat = pos.coords.latitude;
+            const lon = pos.coords.longitude;
+
+            // update form fields
+            document.getElementById("latitude").value = lat;
+            document.getElementById("longitude").value = lon;
+
+            // fetch weather automatically
+            const weather = await getWeatherDetails(lat, lon);
+
+            if (weather) {
+                document.getElementById("temperature").value = weather.temperature;
+                document.getElementById("humidity").value = weather.humidity;
+                document.getElementById("rainfall").value = weather.rainfall;
+            }
+        },
+        () => {
+            alert("Location access denied. Please enable location for auto weather.");
+        }
+    );
+}
+
+// ==========================================
+// 2. Fetch weather from Open-Meteo
+// ==========================================
 async function getWeatherDetails(lat, lon) {
     const url =
         `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
@@ -7,19 +48,93 @@ async function getWeatherDetails(lat, lon) {
         const response = await fetch(url);
         const data = await response.json();
 
-        const temps = data.hourly.temperature_2m;
-        const humidity = data.hourly.relative_humidity_2m;
-        const rainfall = data.hourly.rain;
-
         return {
-            temperature: temps[0],          // Current hour temp
-            humidity: humidity[0],          // Current hour humidity
-            rainfall: rainfall[0],          // Current hour rainfall (mm)
-            raw: data                       // Full API response (optional)
+            temperature: data.hourly.temperature_2m[0],
+            humidity: data.hourly.relative_humidity_2m[0],
+            rainfall: data.hourly.rain[0]
         };
 
     } catch (error) {
         console.error("Weather fetch failed:", error);
         return null;
     }
+}
+
+// ==========================================
+// 3. Call Gemini API for water demand
+// ==========================================
+async function getWaterPrediction(temp, humidity, rain, crop, area) {
+
+    const apiKey = "YOUR_GEMINI_API_KEY";
+
+    const prompt = `
+You are an agricultural irrigation expert.
+Using the data below, calculate:
+
+1. Water Requirement Per Day (mm/day)
+2. Total Water Needed (litres/day)
+
+Crop: ${crop}
+Land Area: ${area} hectares
+Temperature: ${temp}°C
+Humidity: ${humidity}%
+Rainfall: ${rain}mm
+
+Reply ONLY in this format:
+
+Water Requirement Per Day: X mm/day
+Total Water Needed: Y litres
+    `;
+
+    const body = {
+        contents: [
+            {
+                parts: [{ text: prompt }]
+            }
+        ]
+    };
+
+    try {
+        const response = await fetch(
+            "https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=" + apiKey,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body)
+            }
+        );
+
+        const data = await response.json();
+
+        return data.candidates?.[0]?.content?.parts?.[0]?.text || "No AI response.";
+
+    } catch (err) {
+        console.error("Gemini API Error:", err);
+        return "Error: Could not get prediction.";
+    }
+}
+
+// ==========================================
+// 4. Handle Calculate Button Click
+// ==========================================
+async function calculateWater() {
+    const crop = document.getElementById("crop").value;
+    const area = document.getElementById("area").value;
+
+    const temp = document.getElementById("temperature").value;
+    const humidity = document.getElementById("humidity").value;
+    const rainfall = document.getElementById("rainfall").value;
+
+    // Call Gemini AI
+    const result = await getWaterPrediction(
+        temp,
+        humidity,
+        rainfall,
+        crop,
+        area
+    );
+
+    // Show the result
+    document.getElementById("result").style.display = "block";
+    document.getElementById("result").innerText = result;
 }
