@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Water Demand Predictor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 480px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333;
+            font-size: 28px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+            animation: fadeIn 0.6s ease-out backwards;
+        }
+        
+        .input-group:nth-child(2) { animation-delay: 0.1s; }
+        .input-group:nth-child(3) { animation-delay: 0.2s; }
+        .input-group:nth-child(4) { animation-delay: 0.3s; }
+        .input-group:nth-child(5) { animation-delay: 0.4s; }
+        .input-group:nth-child(6) { animation-delay: 0.5s; }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #555;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .area-inputs {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .area-inputs input {
+            flex: 1;
+        }
+        
+        .area-inputs select {
+            flex: 0.8;
+        }
+        
+        button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            border-radius: 15px;
+            display: none;
+            animation: resultSlide 0.5s ease-out;
+            box-shadow: 0 8px 25px rgba(132, 250, 176, 0.3);
+        }
+        
+        @keyframes resultSlide {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .result b {
+            display: block;
+            margin-bottom: 10px;
+            color: #2d3748;
+            font-size: 16px;
+        }
+        
+        .result p {
+            color: #1a202c;
+            font-size: 24px;
+            font-weight: 700;
+            margin: 5px 0;
+        }
+        
+        .result .total-water {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid rgba(255, 255, 255, 0.5);
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px;
+            }
+            h2 {
+                font-size: 24px;
+            }
+            button {
+                font-size: 14px;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>💧 Water Demand Predictor</h2>
+        
+        <div class="input-group">
+            <label>Crop Type</label>
+            <select id="crop">
+                <option>Wheat</option>
+                <option>Rice</option>
+                <option>Maize</option>
+                <option>Sugarcane</option>
+                <option>Cotton</option>
+                <option>Millet</option>
+                <option>Sorghum</option>
+                <option>Potato</option>
+                <option>Soybean</option>
+                <option>Groundnut</option>
+                <option>Sunflower</option>
+            </select>
+        </div>
+        
+        <div class="input-group">
+            <label>Land Area</label>
+            <div class="area-inputs">
+                <input type="number" id="area" value="1" min="0" step="0.01">
+                <select id="areaUnit">
+                    <option>Acres</option>
+                    <option>Bigha</option>
+                    <option>Hectares</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="input-group">
+            <label>Temperature (°C)</label>
+            <input type="number" id="temp" value="32">
+        </div>
+        
+        <div class="input-group">
+            <label>Humidity (%)</label>
+            <input type="number" id="humidity" value="60">
+        </div>
+        
+        <div class="input-group">
+            <label>Rainfall (mm)</label>
+            <input type="number" id="rain" value="0">
+        </div>
+        
+        <button onclick="predict()">🔮 Predict Water Requirement</button>
+        
+        <div class="result" id="resultBox">
+            <b>Water Requirement Per Day:</b>
+            <p id="output"></p>
+            <div class="total-water">
+                <b>Total Water Needed:</b>
+                <p id="totalOutput"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function predict() {
+            let crop = document.getElementById("crop").value;
+            let area = Number(document.getElementById("area").value);
+            let areaUnit = document.getElementById("areaUnit").value;
+            let temp = Number(document.getElementById("temp").value);
+            let humidity = Number(document.getElementById("humidity").value);
+            let rain = Number(document.getElementById("rain").value);
+            
+            // Convert area to acres for standardization
+            let areaInAcres = area;
+            if (areaUnit === "Bigha") {
+                areaInAcres = area * 0.625; // 1 Bigha ≈ 0.625 acres
+            } else if (areaUnit === "Hectares") {
+                areaInAcres = area * 2.471; // 1 Hectare ≈ 2.471 acres
+            }
+            
+            // Base formula for water requirement
+            let base = temp * 0.2 + (100 - humidity) * 0.1 - rain * 0.3;
+            
+            // Crop water coefficients (Kc)
+            let kcValues = {
+                "Wheat": 0.85,
+                "Rice": 1.20,
+                "Maize": 1.00,
+                "Sugarcane": 1.25,
+                "Cotton": 0.95,
+                "Millet": 0.70,
+                "Sorghum": 0.75,
+                "Potato": 1.10,
+                "Soybean": 0.90,
+                "Groundnut": 0.85,
+                "Sunflower": 0.95
+            };
+            
+            let kc = kcValues[crop] || 1;
+            let waterPerDay = base * kc;
+            if (waterPerDay < 0) waterPerDay = 0;
+            
+            // Calculate total water needed (mm/day * area)
+            // 1 acre-mm = 102.79 cubic meters
+            let totalWaterMM = waterPerDay * areaInAcres;
+            let totalWaterCubicMeters = (totalWaterMM * 102.79).toFixed(0);
+            let totalWaterLiters = (totalWaterMM * 102790).toFixed(0);
+            
+            document.getElementById("output").innerText = waterPerDay.toFixed(1) + " mm/day";
+            document.getElementById("totalOutput").innerText = 
+                totalWaterCubicMeters + " m³/day (" + 
+                totalWaterLiters.toLocaleString() + " liters/day)";
+            document.getElementById("resultBox").style.display = "block";
+        }
+    </script>
+</body>
+</html>
